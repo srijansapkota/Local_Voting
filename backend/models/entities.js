@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const entitySchema = new mongoose.Schema({
-  id: { type: String, required: true, unique: true },
+  id: { type: mongoose.Schema.Types.Mixed, required: true, unique: true }, // Accept both string and number
   name: { type: String, required: true },
   shortName: { type: String, required: true },
   image: { type: String },

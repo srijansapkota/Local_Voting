@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const voteSchema = new mongoose.Schema({
   userId: { type: String, required: true },
-  memberId: { type: String, required: true },
+  memberId: { type: mongoose.Schema.Types.Mixed, required: true }, // Accept both string and number
   voteType: { type: String, enum: ["like", "dislike"], required: true },
 });
 

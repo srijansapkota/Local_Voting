@@ -12,9 +12,11 @@ const MONGOURL = process.env.MONGOURI || "mongodb://localhost:27017/normal_app";
 async function seed() {
   await mongoose.connect(MONGOURL);
   for (const member of cardData) {
+    // Convert string ID to numeric ID to match frontend
+    const numericId = parseInt(member.id);
     await Member.updateOne(
-      { id: member.id },
-      { $set: { ...member } },
+      { id: numericId },
+      { $set: { ...member, id: numericId } },
       { upsert: true }
     );
   }

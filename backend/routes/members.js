@@ -8,7 +8,7 @@ const Member = require("../models/members");
 // Get member data with voting status for authenticated users
 router.get("/:id", async (req, res) => {
   try {
-    let member = await Member.findOne({ id: req.params.id });
+    let member = await Member.findOne({ id: String(req.params.id) });
     if (!member) {
       return res.status(404).json({ error: "Member not found" });
     }
@@ -28,7 +28,7 @@ router.get("/:id", async (req, res) => {
         // Check if user has voted for this member
         const existingVote = await Vote.findOne({ 
           userId: userId, 
-          memberId: req.params.id 
+          memberId: String(req.params.id) 
         });
 
         if (existingVote) {
@@ -60,7 +60,7 @@ router.post("/:id/vote", auth, async (req, res) => {
   try {
     const { type } = req.body;
     const userId = req.user; // From auth middleware
-    const memberId = req.params.id;
+    const memberId = String(req.params.id);
 
     if (!type || !["like", "dislike"].includes(type)) {
       return res.status(400).json({ error: "Invalid vote type" });
