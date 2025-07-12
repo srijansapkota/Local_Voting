@@ -4,8 +4,6 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const path = require("path");
-const seedMembers = require('./seedMembers');
-const seedEntities = require('./seedEntities');
 
 // Initialize Express app
 const app = express();
@@ -18,7 +16,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5174", "https://normal-app2-1.onrender.com"],
+    origin: ["http://localhost:5173", "http://localhost:5174"],
     credentials: true,
   })
 );
@@ -57,16 +55,6 @@ app.use("/members", membersRoute);
 app.use("/feedback", feedbackRoute);
 app.use("/auth", authRoute);
 app.use("/entities", entitiesRoute);
-app.get('/seed-all', async (req, res) => {
-  try {
-    // Run the seeder scripts
-    require('./seedMembers');
-    require('./seedEntities');
-    res.send('Seeding complete! Check the server logs for details.');
-  } catch (err) {
-    res.status(500).send('Seeding failed: ' + err.message);
-  }
-});
 
 // Serve static files in production
 if (process.env.NODE_ENV === "production") {
