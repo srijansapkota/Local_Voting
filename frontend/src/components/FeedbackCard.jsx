@@ -17,14 +17,14 @@ const FeedbackCard = ({ image, question, id }) => {
       try {
         // First try to check authentication
         try {
-          await axios.get("/api/home", { withCredentials: true });
+          await axios.get("https://normal-app2.onrender.com/api/home", { withCredentials: true });
           setIsAuthenticated(true);
         } catch (authErr) {
           setIsAuthenticated(false);
         }
         // Fetch feedback data (this should work even without auth)
         try {
-          const response = await axios.get(`/api/feedback/${id}`, { withCredentials: true });
+          const response = await axios.get(`https://normal-app2.onrender.com/api/feedback/${id}`, { withCredentials: true });
           setFeedbackData(response.data);
           setHasVoted(response.data.hasVoted || false);
           setVoteType(response.data.voteType || null);
@@ -55,7 +55,7 @@ const FeedbackCard = ({ image, question, id }) => {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        `/api/feedback/${id}/vote`,
+        `https://normal-app2.onrender.com/api/feedback/${id}/vote`,
         { type },
         { withCredentials: true }
       );

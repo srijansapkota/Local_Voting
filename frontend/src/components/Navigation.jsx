@@ -11,7 +11,7 @@ const Navigation = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        await axios.get("/api/home", { withCredentials: true });
+        await axios.get("https://normal-app2.onrender.com/api/home", { withCredentials: true });
         setIsAuthenticated(true);
       } catch (error) {
         setIsAuthenticated(false);
@@ -22,7 +22,7 @@ const Navigation = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("/auth/logout", {}, { withCredentials: true });
+      await axios.post("https://normal-app2.onrender.com/auth/logout", {}, { withCredentials: true });
       setIsAuthenticated(false);
     } catch (error) {
       console.error("Logout error:", error);

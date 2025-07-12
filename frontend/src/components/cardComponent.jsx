@@ -17,14 +17,14 @@ const CardComponent = ({ cardId, image, name, designation }) => {
       try {
         // First try to check authentication
         try {
-          await axios.get("/api/home", { withCredentials: true });
+          await axios.get("https://normal-app2.onrender.com/api/home", { withCredentials: true });
           setIsAuthenticated(true);
         } catch (authErr) {
           setIsAuthenticated(false);
         }
         // Fetch member data (this should work even without auth)
         try {
-          const response = await axios.get(`/api/members/${cardId}`, { withCredentials: true });
+          const response = await axios.get(`https://normal-app2.onrender.com/api/members/${cardId}`, { withCredentials: true });
           setMemberData(response.data);
           setHasVoted(response.data.hasVoted || false);
           setVoteType(response.data.voteType || null);
@@ -55,7 +55,7 @@ const CardComponent = ({ cardId, image, name, designation }) => {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        `/api/members/${cardId}/vote`,
+        `https://normal-app2.onrender.com/api/members/${cardId}/vote`,
         { type },
         { withCredentials: true }
       );

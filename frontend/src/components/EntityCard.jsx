@@ -17,14 +17,14 @@ const EntityCard = ({ image, name, shortName, id }) => {
       try {
         // First try to check authentication
         try {
-          await axios.get("/api/home", { withCredentials: true });
+          await axios.get("https://normal-app2.onrender.com/api/home", { withCredentials: true });
           setIsAuthenticated(true);
         } catch (authErr) {
           setIsAuthenticated(false);
         }
         // Fetch entity data (this should work even without auth)
         try {
-          const response = await axios.get(`/api/entities/${id}`, { withCredentials: true });
+          const response = await axios.get(`https://normal-app2.onrender.com/api/entities/${id}`, { withCredentials: true });
           setEntityData(response.data);
           setHasVoted(response.data.hasVoted || false);
           setVoteType(response.data.voteType || null);
@@ -55,7 +55,7 @@ const EntityCard = ({ image, name, shortName, id }) => {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        `/api/entities/${id}/vote`,
+        `https://normal-app2.onrender.com/api/entities/${id}/vote`,
         { type },
         { withCredentials: true }
       );
