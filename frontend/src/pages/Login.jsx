@@ -80,12 +80,6 @@ export default function Login() {
           >
             Login
           </Button>
-          <Button
-            type="button"
-            className="w-full bg-zinc-800 text-white border border-zinc-700 font-semibold py-2 rounded-lg shadow-sm hover:bg-zinc-700 transition-all"
-          >
-            Login with Google
-          </Button>
         </form>
         <div className="text-center text-sm mt-6 text-zinc-400">
           Don't have an account?{" "}
