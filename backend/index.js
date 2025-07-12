@@ -4,6 +4,8 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const path = require("path");
+const seedMembers = require('./seedMembers');
+const seedEntities = require('./seedEntities');
 
 // Initialize Express app
 const app = express();
@@ -55,6 +57,15 @@ app.use("/members", membersRoute);
 app.use("/feedback", feedbackRoute);
 app.use("/auth", authRoute);
 app.use("/entities", entitiesRoute);
+app.get('/seed-all', async (req, res) => {
+  try {
+    await import('./seedMembers.js');
+    await import('./seedEntities.js');
+    res.send('Seeding complete!');
+  } catch (err) {
+    res.status(500).send('Seeding failed: ' + err.message);
+  }
+});
 
 // Serve static files in production
 if (process.env.NODE_ENV === "production") {
