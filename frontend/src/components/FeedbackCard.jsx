@@ -20,41 +20,21 @@ const FeedbackCard = ({ image, question, id }) => {
           await axios.get("/api/home", { withCredentials: true });
           setIsAuthenticated(true);
         } catch (authErr) {
-          // User is not authenticated, but we'll still show the card
           setIsAuthenticated(false);
         }
-        
         // Fetch feedback data (this should work even without auth)
-        const response = await axios.get(`/api/feedback/${id}`, { 
-          withCredentials: true 
-        });
-        
-        setFeedbackData(response.data);
-        setHasVoted(response.data.hasVoted || false);
-        setVoteType(response.data.voteType || null);
-      } catch (err) {
-        if (err.response?.status === 404) {
-          // Create feedback if not exists (only if authenticated)
-          if (isAuthenticated) {
-            try {
-              await axios.post("/api/feedback", { id, question }, { withCredentials: true });
-              // Fetch the newly created feedback
-              const newResponse = await axios.get(`/api/feedback/${id}`, { withCredentials: true });
-              setFeedbackData(newResponse.data);
-              setHasVoted(newResponse.data.hasVoted || false);
-              setVoteType(newResponse.data.voteType || null);
-            } catch (createErr) {
-              console.error("Error creating feedback:", createErr);
-              setError(createErr.response?.data?.error || "Failed to create feedback");
-            }
+        try {
+          const response = await axios.get(`/api/feedback/${id}`, { withCredentials: true });
+          setFeedbackData(response.data);
+          setHasVoted(response.data.hasVoted || false);
+          setVoteType(response.data.voteType || null);
+        } catch (err) {
+          if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+            navigate("/login", { state: { message: "Please login to view this card." } });
+            return;
+          } else if (err.response && err.response.status === 404) {
+            setError("Feedback data not found");
           } else {
-            // If not authenticated, just show the question without data
-            setFeedbackData({ id, question, like: 0, dislike: 0 });
-          }
-        } else {
-          console.error("Error:", err);
-          // Don't set error for auth issues, just show the card without voting data
-          if (err.response?.status !== 401) {
             setError(err.response?.data?.error || "Failed to load data");
           }
         }
@@ -62,9 +42,8 @@ const FeedbackCard = ({ image, question, id }) => {
         setIsLoading(false);
       }
     };
-
     checkAuthAndFetchData();
-  }, [id, question, isAuthenticated]);
+  }, [id, question, navigate]);
 
   const handleVote = async (type) => {
     if (!isAuthenticated) {

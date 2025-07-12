@@ -20,30 +20,30 @@ const EntityCard = ({ image, name, shortName, id }) => {
           await axios.get("/api/home", { withCredentials: true });
           setIsAuthenticated(true);
         } catch (authErr) {
-          // User is not authenticated, but we'll still show the card
           setIsAuthenticated(false);
         }
-        
         // Fetch entity data (this should work even without auth)
-        const response = await axios.get(`/api/entities/${id}`, { 
-          withCredentials: true 
-        });
-        
-        setEntityData(response.data);
-        setHasVoted(response.data.hasVoted || false);
-        setVoteType(response.data.voteType || null);
-      } catch (err) {
-        console.error("Error:", err);
-        // Don't set error for auth issues, just show the card without voting data
-        if (err.response?.status !== 401) {
-          setError(err.response?.data?.error || "Failed to load data");
+        try {
+          const response = await axios.get(`/api/entities/${id}`, { withCredentials: true });
+          setEntityData(response.data);
+          setHasVoted(response.data.hasVoted || false);
+          setVoteType(response.data.voteType || null);
+        } catch (err) {
+          if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+            navigate("/login", { state: { message: "Please login to view this card." } });
+            return;
+          } else if (err.response && err.response.status === 404) {
+            setError("Entity data not found");
+          } else {
+            setError(err.response?.data?.error || "Failed to load data");
+          }
         }
       } finally {
         setIsLoading(false);
       }
     };
     checkAuthAndFetchData();
-  }, [id]);
+  }, [id, navigate]);
 
   const handleVote = async (type) => {
     if (!isAuthenticated) {
