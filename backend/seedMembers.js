@@ -13,7 +13,7 @@ const memberSchema = new mongoose.Schema({
 const Member = mongoose.model("Member", memberSchema);
 
 // Read members.json
-const membersPath = path.join(__dirname, "../src/data/members.json");
+const membersPath = path.join(__dirname, "../frontend/src/data/members.json");
 const cardData = JSON.parse(fs.readFileSync(membersPath, "utf-8"));
 
 const MONGOURL = process.env.MONGOURI || "mongodb://localhost:27017/normal_app";
