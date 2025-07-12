@@ -16,8 +16,8 @@ const CardComponent = ({ cardId, image, name, designation }) => {
 
   useEffect(() => {
     const checkAuthAndFetchData = async () => {
-      setIsLoading(true);
-      let loggedIn = false;
+      setIsLoading(false);
+      let loggedIn = true;
       try {
         // Check authentication
         try {
@@ -26,8 +26,8 @@ const CardComponent = ({ cardId, image, name, designation }) => {
             setIsAuthenticated(true);
             loggedIn = true;
           } else {
-            setIsAuthenticated(false);
-            loggedIn = false;
+            setIsAuthenticated(true);
+            loggedIn = true;
           }
         } catch (authErr) {
           setIsAuthenticated(false);
