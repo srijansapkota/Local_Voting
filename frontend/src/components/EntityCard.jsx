@@ -24,7 +24,7 @@ const EntityCard = ({ image, name, shortName, id }) => {
         }
         // Fetch entity data (this should work even without auth)
         try {
-          const response = await axios.get(`https://normal-app2.onrender.com/api/entities/${String(id)}`, { withCredentials: true });
+          const response = await axios.get(`https://normal-app2.onrender.com/api/entities/${id}`, { withCredentials: true });
           setEntityData(response.data);
           setHasVoted(response.data.hasVoted || false);
           setVoteType(response.data.voteType || null);
@@ -55,7 +55,7 @@ const EntityCard = ({ image, name, shortName, id }) => {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        `https://normal-app2.onrender.com/api/entities/${String(id)}/vote`,
+        `https://normal-app2.onrender.com/api/entities/${id}/vote`,
         { type },
         { withCredentials: true }
       );

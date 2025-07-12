@@ -8,8 +8,7 @@ const Member = require("../models/members");
 // Get member data with voting status for authenticated users
 router.get("/:id", async (req, res) => {
   try {
-    let memberId = String(req.params.id);
-    let member = await Member.findOne({ id: memberId });
+    let member = await Member.findOne({ id: String(req.params.id) });
     if (!member) {
       return res.status(404).json({ error: "Member not found" });
     }
@@ -29,7 +28,7 @@ router.get("/:id", async (req, res) => {
         // Check if user has voted for this member
         const existingVote = await Vote.findOne({ 
           userId: userId, 
-          memberId: memberId 
+          memberId: String(req.params.id) 
         });
 
         if (existingVote) {
