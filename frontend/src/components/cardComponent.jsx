@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
 
-const API_BASE_URL = "/api";
+const API_BASE_URL = "";
 
 const CardComponent = ({ cardId, image, name, designation }) => {
   const navigate = useNavigate();
