@@ -13,7 +13,7 @@ export default defineConfig({
       "/auth": {
         target: "http://localhost:8000",
         changeOrigin: true,
-        // No rewrite needed, keep /auth
+        rewrite: (path) => path.replace(/^\/auth/, "/auth"),
       },
     },
   },
