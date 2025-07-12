@@ -16,6 +16,7 @@ feedbackSchema.pre("save", function (next) {
   next();
 });
 
-const Feedback = mongoose.model("Feedback", feedbackSchema);
+// Only create the model if it doesn't already exist
+const Feedback = mongoose.models.Feedback || mongoose.model("Feedback", feedbackSchema);
 
 module.exports = Feedback;

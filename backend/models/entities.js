@@ -9,4 +9,7 @@ const entitySchema = new mongoose.Schema({
   downvotes: { type: Number, default: 0 },
 });
 
-module.exports = mongoose.model("Entity", entitySchema);
+// Only create the model if it doesn't already exist
+const Entity = mongoose.models.Entity || mongoose.model("Entity", entitySchema);
+
+module.exports = Entity;

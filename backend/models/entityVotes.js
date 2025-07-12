@@ -1,26 +1,12 @@
 const mongoose = require("mongoose");
 
 const entityVoteSchema = new mongoose.Schema({
-  userId: {
-    type: String,
-    required: true,
-  },
-  entityId: {
-    type: String,
-    required: true,
-  },
-  voteType: {
-    type: String,
-    enum: ["up", "down"],
-    required: true,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
+  userId: { type: String, required: true },
+  entityId: { type: String, required: true },
+  voteType: { type: String, enum: ["up", "down"], required: true },
 });
 
-// Compound index to ensure one vote per user per entity
-entityVoteSchema.index({ userId: 1, entityId: 1 }, { unique: true });
+// Only create the model if it doesn't already exist
+const EntityVote = mongoose.models.EntityVote || mongoose.model("EntityVote", entityVoteSchema);
 
-module.exports = mongoose.model("EntityVote", entityVoteSchema); 
+module.exports = EntityVote; 
