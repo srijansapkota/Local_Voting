@@ -1,9 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const auth = require("../middleware/auth");
 
-router.get("/home", auth, (req, res) => {
-  res.json({ message: "Welcome to the home page!" });
+// Make this route public for auth check
+router.get("/", (req, res) => {
+  if (req.cookies && req.cookies.token) {
+    res.json({ authenticated: true });
+  } else {
+    res.status(401).json({ authenticated: false });
+  }
 });
 
 module.exports = router;
