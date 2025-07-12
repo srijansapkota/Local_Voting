@@ -50,11 +50,11 @@ const entitiesRoute = require("./routes/entities");
 app.use("/auth", signupRoute);
 app.use("/auth", loginRoute);
 app.use("/auth", logoutRoute);
-app.use("/", homeRoute);
-app.use("/members", membersRoute);
-app.use("/feedback", feedbackRoute);
-app.use("/auth", authRoute);
-app.use("/entities", entitiesRoute);
+app.use("/api/home", homeRoute);
+app.use("/api/members", membersRoute);
+app.use("/api/feedback", feedbackRoute);
+app.use("/api/auth", authRoute);
+app.use("/api/entities", entitiesRoute);
 
 // Serve static files in production
 if (process.env.NODE_ENV === "production") {
