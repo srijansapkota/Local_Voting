@@ -20,7 +20,7 @@ export default function Signup() {
     }
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:8000/auth/signup", {
+      const res = await axios.post("https://normal-app2.onrender.com/auth/signup", {
         name,
         email,
         password,
