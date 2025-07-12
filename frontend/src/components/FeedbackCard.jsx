@@ -3,6 +3,11 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+const API_BASE_URL =
+  import.meta.env.PROD
+    ? "https://normal-app2.onrender.com/api"
+    : "/api";
+
 const FeedbackCard = ({ image, question, id }) => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -15,23 +20,36 @@ const FeedbackCard = ({ image, question, id }) => {
   useEffect(() => {
     const checkAuthAndFetchData = async () => {
       try {
-        // First try to check authentication
+        // Check authentication
+        let loggedIn = false;
         try {
-          await axios.get("https://normal-app2.onrender.com/api/home", { withCredentials: true });
-          setIsAuthenticated(true);
+          const authRes = await axios.get(`${API_BASE_URL}/home`, { withCredentials: true });
+          if (authRes.status === 200 && authRes.data.authenticated) {
+            setIsAuthenticated(true);
+            loggedIn = true;
+            console.log('FeedbackCard: User is authenticated');
+          } else {
+            setIsAuthenticated(false);
+            loggedIn = false;
+            console.log('FeedbackCard: User is not authenticated');
+          }
         } catch (authErr) {
           setIsAuthenticated(false);
+          loggedIn = false;
+          console.log('FeedbackCard: Auth check failed', authErr);
         }
         // Fetch feedback data (this should work even without auth)
         try {
-          const response = await axios.get(`https://normal-app2.onrender.com/api/feedback/${id}`, { withCredentials: true });
+          const response = await axios.get(`${API_BASE_URL}/feedback/${String(id)}`, { withCredentials: true });
           setFeedbackData(response.data);
           setHasVoted(response.data.hasVoted || false);
           setVoteType(response.data.voteType || null);
         } catch (err) {
           if (err.response && (err.response.status === 401 || err.response.status === 403)) {
-            navigate("/login", { state: { message: "Please login to view this card." } });
-            return;
+            if (!loggedIn) {
+              navigate("/login", { state: { message: "Please login to view this card." } });
+              return;
+            }
           } else if (err.response && err.response.status === 404) {
             setError("Feedback data not found");
           } else {
@@ -51,24 +69,22 @@ const FeedbackCard = ({ image, question, id }) => {
       return;
     }
     if (hasVoted) return;
-
     try {
       setIsLoading(true);
       const response = await axios.post(
-        `https://normal-app2.onrender.com/api/feedback/${id}/vote`,
+        `${API_BASE_URL}/feedback/${String(id)}/vote`,
         { type },
         { withCredentials: true }
       );
-
       setFeedbackData(response.data);
       setHasVoted(response.data.hasVoted);
       setVoteType(response.data.voteType);
     } catch (err) {
       if (err.response && err.response.status === 401) {
+        setIsAuthenticated(false);
         navigate("/login", { state: { message: "Please login to vote." } });
         return;
       }
-      console.error("Voting error:", err);
       setError(err.response?.data?.error || "Failed to submit vote");
     } finally {
       setIsLoading(false);

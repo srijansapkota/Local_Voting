@@ -3,6 +3,11 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
 
+const API_BASE_URL =
+  import.meta.env.PROD
+    ? "https://normal-app2.onrender.com/api"
+    : "/api";
+
 const EntityCard = ({ image, name, shortName, id }) => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -15,23 +20,36 @@ const EntityCard = ({ image, name, shortName, id }) => {
   useEffect(() => {
     const checkAuthAndFetchData = async () => {
       try {
-        // First try to check authentication
+        // Check authentication
+        let loggedIn = false;
         try {
-          await axios.get("https://normal-app2.onrender.com/api/home", { withCredentials: true });
-          setIsAuthenticated(true);
+          const authRes = await axios.get(`${API_BASE_URL}/home`, { withCredentials: true });
+          if (authRes.status === 200 && authRes.data.authenticated) {
+            setIsAuthenticated(true);
+            loggedIn = true;
+            console.log('EntityCard: User is authenticated');
+          } else {
+            setIsAuthenticated(false);
+            loggedIn = false;
+            console.log('EntityCard: User is not authenticated');
+          }
         } catch (authErr) {
           setIsAuthenticated(false);
+          loggedIn = false;
+          console.log('EntityCard: Auth check failed', authErr);
         }
         // Fetch entity data (this should work even without auth)
         try {
-          const response = await axios.get(`https://normal-app2.onrender.com/api/entities/${id}`, { withCredentials: true });
+          const response = await axios.get(`${API_BASE_URL}/entities/${String(id)}`, { withCredentials: true });
           setEntityData(response.data);
           setHasVoted(response.data.hasVoted || false);
           setVoteType(response.data.voteType || null);
         } catch (err) {
           if (err.response && (err.response.status === 401 || err.response.status === 403)) {
-            navigate("/login", { state: { message: "Please login to view this card." } });
-            return;
+            if (!loggedIn) {
+              navigate("/login", { state: { message: "Please login to view this card." } });
+              return;
+            }
           } else if (err.response && err.response.status === 404) {
             setError("Entity data not found");
           } else {
@@ -51,20 +69,19 @@ const EntityCard = ({ image, name, shortName, id }) => {
       return;
     }
     if (hasVoted) return;
-
     try {
       setIsLoading(true);
       const response = await axios.post(
-        `https://normal-app2.onrender.com/api/entities/${id}/vote`,
+        `${API_BASE_URL}/entities/${String(id)}/vote`,
         { type },
         { withCredentials: true }
       );
-
       setEntityData(response.data);
       setHasVoted(response.data.hasVoted);
       setVoteType(response.data.voteType);
     } catch (err) {
       if (err.response && err.response.status === 401) {
+        setIsAuthenticated(false);
         navigate("/login", { state: { message: "Please login to vote." } });
         return;
       }

@@ -19,11 +19,14 @@ const Navigation = () => {
         const authRes = await axios.get(`${API_BASE_URL}/home`, { withCredentials: true });
         if (authRes.status === 200 && authRes.data.authenticated) {
           setIsAuthenticated(true);
+          console.log('User is authenticated');
         } else {
           setIsAuthenticated(false);
+          console.log('User is not authenticated');
         }
       } catch (error) {
         setIsAuthenticated(false);
+        console.log('Auth check failed', error);
       }
     };
     checkAuth();

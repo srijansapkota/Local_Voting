@@ -20,16 +20,20 @@ const CardComponent = ({ cardId, image, name, designation }) => {
   useEffect(() => {
     const checkAuthAndFetchData = async () => {
       try {
-        // First try to check authentication
+        // Check authentication
+        let loggedIn = false;
         try {
           const authRes = await axios.get(`${API_BASE_URL}/home`, { withCredentials: true });
           if (authRes.status === 200 && authRes.data.authenticated) {
             setIsAuthenticated(true);
+            loggedIn = true;
           } else {
             setIsAuthenticated(false);
+            loggedIn = false;
           }
         } catch (authErr) {
           setIsAuthenticated(false);
+          loggedIn = false;
         }
         // Fetch member data (this should work even without auth)
         try {
@@ -39,8 +43,10 @@ const CardComponent = ({ cardId, image, name, designation }) => {
           setVoteType(response.data.voteType || null);
         } catch (err) {
           if (err.response && (err.response.status === 401 || err.response.status === 403)) {
-            navigate("/login", { state: { message: "Please login to view this card." } });
-            return;
+            if (!loggedIn) {
+              navigate("/login", { state: { message: "Please login to view this card." } });
+              return;
+            }
           } else if (err.response && err.response.status === 404) {
             setError("Member data not found");
           } else {
@@ -60,7 +66,6 @@ const CardComponent = ({ cardId, image, name, designation }) => {
       return;
     }
     if (hasVoted) return;
-
     try {
       setIsLoading(true);
       const response = await axios.post(
@@ -68,12 +73,12 @@ const CardComponent = ({ cardId, image, name, designation }) => {
         { type },
         { withCredentials: true }
       );
-
       setMemberData(response.data);
       setHasVoted(response.data.hasVoted);
       setVoteType(response.data.voteType);
     } catch (err) {
       if (err.response && err.response.status === 401) {
+        setIsAuthenticated(false);
         navigate("/login", { state: { message: "Please login to vote." } });
         return;
       }
