@@ -24,7 +24,7 @@ const FeedbackCard = ({ image, question, id }) => {
         }
         // Fetch feedback data (this should work even without auth)
         try {
-          const response = await axios.get(`https://normal-app2.onrender.com/api/feedback/${id}`, { withCredentials: true });
+          const response = await axios.get(`https://normal-app2.onrender.com/api/feedback/${String(id)}`, { withCredentials: true });
           setFeedbackData(response.data);
           setHasVoted(response.data.hasVoted || false);
           setVoteType(response.data.voteType || null);
@@ -55,7 +55,7 @@ const FeedbackCard = ({ image, question, id }) => {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        `https://normal-app2.onrender.com/api/feedback/${id}/vote`,
+        `https://normal-app2.onrender.com/api/feedback/${String(id)}/vote`,
         { type },
         { withCredentials: true }
       );

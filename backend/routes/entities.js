@@ -17,7 +17,8 @@ router.get("/", async (req, res) => {
 // Get a single entity by id with voting status
 router.get("/:id", async (req, res) => {
   try {
-    const entity = await Entity.findOne({ id: String(req.params.id) });
+    const entityId = String(req.params.id);
+    const entity = await Entity.findOne({ id: entityId });
     if (!entity) return res.status(404).json({ error: "Entity not found" });
 
     // Check if user is authenticated (token exists)
@@ -35,7 +36,7 @@ router.get("/:id", async (req, res) => {
         // Check if user has voted for this entity
         const existingVote = await EntityVote.findOne({ 
           userId: userId, 
-          entityId: String(req.params.id) 
+          entityId: entityId 
         });
 
         if (existingVote) {

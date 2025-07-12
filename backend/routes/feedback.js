@@ -29,7 +29,8 @@ router.post("/", auth, async (req, res) => {
 // Get feedback with voting status
 router.get("/:id", async (req, res) => {
   try {
-    const feedback = await Feedback.findOne({ id: String(req.params.id) });
+    const feedbackId = String(req.params.id);
+    const feedback = await Feedback.findOne({ id: feedbackId });
     if (!feedback) {
       return res.status(404).json({ error: "Feedback not found" });
     }
@@ -49,7 +50,7 @@ router.get("/:id", async (req, res) => {
         // Check if user has voted for this feedback
         const existingVote = await FeedbackVote.findOne({ 
           userId: userId, 
-          feedbackId: String(req.params.id) 
+          feedbackId: feedbackId 
         });
 
         if (existingVote) {

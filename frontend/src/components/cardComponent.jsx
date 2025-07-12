@@ -24,7 +24,7 @@ const CardComponent = ({ cardId, image, name, designation }) => {
         }
         // Fetch member data (this should work even without auth)
         try {
-          const response = await axios.get(`https://normal-app2.onrender.com/api/members/${cardId}`, { withCredentials: true });
+          const response = await axios.get(`https://normal-app2.onrender.com/api/members/${String(cardId)}`, { withCredentials: true });
           setMemberData(response.data);
           setHasVoted(response.data.hasVoted || false);
           setVoteType(response.data.voteType || null);
@@ -55,7 +55,7 @@ const CardComponent = ({ cardId, image, name, designation }) => {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        `https://normal-app2.onrender.com/api/members/${cardId}/vote`,
+        `https://normal-app2.onrender.com/api/members/${String(cardId)}/vote`,
         { type },
         { withCredentials: true }
       );
