@@ -22,8 +22,12 @@ const CardComponent = ({ cardId, image, name, designation }) => {
       try {
         // First try to check authentication
         try {
-          await axios.get(`${API_BASE_URL}/home`, { withCredentials: true });
-          setIsAuthenticated(true);
+          const authRes = await axios.get(`${API_BASE_URL}/home`, { withCredentials: true });
+          if (authRes.status === 200 && authRes.data.authenticated) {
+            setIsAuthenticated(true);
+          } else {
+            setIsAuthenticated(false);
+          }
         } catch (authErr) {
           setIsAuthenticated(false);
         }

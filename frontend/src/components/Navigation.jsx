@@ -3,6 +3,11 @@ import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import axios from "axios";
 
+const API_BASE_URL =
+  import.meta.env.PROD
+    ? "https://normal-app2.onrender.com/api"
+    : "/api";
+
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -11,8 +16,12 @@ const Navigation = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        await axios.get("https://normal-app2.onrender.com/api/home", { withCredentials: true });
-        setIsAuthenticated(true);
+        const authRes = await axios.get(`${API_BASE_URL}/home`, { withCredentials: true });
+        if (authRes.status === 200 && authRes.data.authenticated) {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+        }
       } catch (error) {
         setIsAuthenticated(false);
       }
