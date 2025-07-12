@@ -19,24 +19,22 @@ const FeedbackCard = ({ image, question, id }) => {
 
   useEffect(() => {
     const checkAuthAndFetchData = async () => {
+      setIsLoading(true);
+      let loggedIn = false;
       try {
         // Check authentication
-        let loggedIn = false;
         try {
           const authRes = await axios.get(`${API_BASE_URL}/home`, { withCredentials: true });
           if (authRes.status === 200 && authRes.data.authenticated) {
             setIsAuthenticated(true);
             loggedIn = true;
-            console.log('FeedbackCard: User is authenticated');
           } else {
             setIsAuthenticated(false);
             loggedIn = false;
-            console.log('FeedbackCard: User is not authenticated');
           }
         } catch (authErr) {
           setIsAuthenticated(false);
           loggedIn = false;
-          console.log('FeedbackCard: Auth check failed', authErr);
         }
         // Fetch feedback data (this should work even without auth)
         try {

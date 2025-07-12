@@ -19,24 +19,22 @@ const EntityCard = ({ image, name, shortName, id }) => {
 
   useEffect(() => {
     const checkAuthAndFetchData = async () => {
+      setIsLoading(true);
+      let loggedIn = false;
       try {
         // Check authentication
-        let loggedIn = false;
         try {
           const authRes = await axios.get(`${API_BASE_URL}/home`, { withCredentials: true });
           if (authRes.status === 200 && authRes.data.authenticated) {
             setIsAuthenticated(true);
             loggedIn = true;
-            console.log('EntityCard: User is authenticated');
           } else {
             setIsAuthenticated(false);
             loggedIn = false;
-            console.log('EntityCard: User is not authenticated');
           }
         } catch (authErr) {
           setIsAuthenticated(false);
           loggedIn = false;
-          console.log('EntityCard: Auth check failed', authErr);
         }
         // Fetch entity data (this should work even without auth)
         try {

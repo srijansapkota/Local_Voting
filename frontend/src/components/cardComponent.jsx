@@ -19,9 +19,10 @@ const CardComponent = ({ cardId, image, name, designation }) => {
 
   useEffect(() => {
     const checkAuthAndFetchData = async () => {
+      setIsLoading(true);
+      let loggedIn = false;
       try {
         // Check authentication
-        let loggedIn = false;
         try {
           const authRes = await axios.get(`${API_BASE_URL}/home`, { withCredentials: true });
           if (authRes.status === 200 && authRes.data.authenticated) {
