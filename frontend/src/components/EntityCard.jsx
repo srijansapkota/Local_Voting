@@ -3,10 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
 
-const API_BASE_URL =
-  import.meta.env.PROD
-    ? "https://normal-app2.onrender.com/api"
-    : "/api";
+const API_BASE_URL = "/api";
 
 const EntityCard = ({ image, name, shortName, id }) => {
   const navigate = useNavigate();

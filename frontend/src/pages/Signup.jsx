@@ -20,7 +20,7 @@ export default function Signup() {
     }
     setLoading(true);
     try {
-      const res = await axios.post("https://normal-app2.onrender.com/auth/signup", {
+      const res = await axios.post("/auth/signup", {
         name,
         email,
         password,

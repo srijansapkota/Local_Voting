@@ -13,7 +13,7 @@ export default function Login() {
     e.preventDefault();
     try {
       await axios.post(
-        "https://normal-app2.onrender.com/auth/login",
+        "/auth/login",
         { email, password },
         { withCredentials: true }
       );

@@ -3,10 +3,7 @@ import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import axios from "axios";
 
-const API_BASE_URL =
-  import.meta.env.PROD
-    ? "https://normal-app2.onrender.com/api"
-    : "/api";
+const API_BASE_URL = "/api";
 
 const Navigation = () => {
   const location = useLocation();
@@ -34,7 +31,7 @@ const Navigation = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("https://normal-app2.onrender.com/auth/logout", {}, { withCredentials: true });
+      await axios.post("/auth/logout", {}, { withCredentials: true });
       setIsAuthenticated(false);
     } catch (error) {
       console.error("Logout error:", error);

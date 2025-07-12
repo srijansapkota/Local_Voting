@@ -3,10 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const API_BASE_URL =
-  import.meta.env.PROD
-    ? "https://normal-app2.onrender.com/api"
-    : "/api";
+const API_BASE_URL = "/api";
 
 const FeedbackCard = ({ image, question, id }) => {
   const navigate = useNavigate();
