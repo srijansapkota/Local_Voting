@@ -1,16 +1,7 @@
 const mongoose = require("mongoose");
 const fs = require("fs");
 const path = require("path");
-
-const memberSchema = new mongoose.Schema({
-  id: { type: String, required: true, unique: true },
-  name: { type: String, required: true },
-  designation: { type: String, required: true },
-  like: { type: Number, default: 0 },
-  dislike: { type: Number, default: 0 },
-  createdAt: { type: Date, default: Date.now },
-});
-const Member = mongoose.model("Member", memberSchema);
+const Member = require("./models/members");
 
 // Read members.json
 const membersPath = path.join(__dirname, "../frontend/src/data/members.json");

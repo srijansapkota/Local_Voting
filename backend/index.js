@@ -59,9 +59,10 @@ app.use("/auth", authRoute);
 app.use("/entities", entitiesRoute);
 app.get('/seed-all', async (req, res) => {
   try {
-    await import('./seedMembers.js');
-    await import('./seedEntities.js');
-    res.send('Seeding complete!');
+    // Run the seeder scripts
+    require('./seedMembers');
+    require('./seedEntities');
+    res.send('Seeding complete! Check the server logs for details.');
   } catch (err) {
     res.status(500).send('Seeding failed: ' + err.message);
   }

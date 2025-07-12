@@ -3,17 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const auth = require("../middleware/auth");
 const Vote = require("../models/votes");
-
-const memberSchema = new mongoose.Schema({
-  id: { type: String, required: true, unique: true },
-  name: { type: String, required: true },
-  designation: { type: String, required: true }, // Add this line
-  like: { type: Number, default: 0 },
-  dislike: { type: Number, default: 0 },
-  createdAt: { type: Date, default: Date.now },
-});
-
-const Member = mongoose.model("Member", memberSchema);
+const Member = require("../models/members");
 
 // Get member data with voting status for authenticated users
 router.get("/:id", async (req, res) => {
