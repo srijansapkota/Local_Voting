@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const memberSchema = new mongoose.Schema({
-  id: { type: mongoose.Schema.Types.Mixed, required: true, unique: true }, // Accept both string and number
+  id: { type: String, required: true, unique: true },
   name: { type: String, required: true },
   designation: { type: String, required: true },
   like: { type: Number, default: 0 },

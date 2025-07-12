@@ -1,6 +1,6 @@
 [
   {
-    "id": 1,
+    "id": "1",
     "name": "BCA (Bachelor of Computer Applications)",
     "image": "",
     "shortName": "BCA",
@@ -8,7 +8,7 @@
     "downvotes": 0
   },
   {
-    "id": 2,
+    "id": "2",
     "name": "BIM (Bachelor of Information Management)",
     "image": "",
     "shortName": "BIM",
@@ -16,7 +16,7 @@
     "downvotes": 0
   },
   {
-    "id": 3,
+    "id": "3",
     "name": "BBS (Bachelor of Business Studies)",
     "image": "",
     "shortName": "BBS",
@@ -24,7 +24,7 @@
     "downvotes": 0
   },
   {
-    "id": 4,
+    "id": "4",
     "name": "BBA (Bachelor of Business Administration)",
     "image": "",
     "shortName": "BBA",
@@ -32,7 +32,7 @@
     "downvotes": 0
   },
   {
-    "id": 5,
+    "id": "5",
     "name": "BSc CSIT (Bachelor of Science in Computer Science & IT)",
     "image": "",
     "shortName": "BSc CSIT",
@@ -40,7 +40,7 @@
     "downvotes": 0
   },
   {
-    "id": 6,
+    "id": "6",
     "name": "BA (Bachelor of Arts)",
     "image": "",
     "shortName": "BA",
@@ -48,7 +48,7 @@
     "downvotes": 0
   },
   {
-    "id": 7,
+    "id": "7",
     "name": "BSW (Bachelor of Social Work)",
     "image": "",
     "shortName": "BSW",
@@ -56,7 +56,7 @@
     "downvotes": 0
   },
   {
-    "id": 8,
+    "id": "8",
     "name": "BSc (Bachelor of Science)",
     "image": "",
     "shortName": "BSc",

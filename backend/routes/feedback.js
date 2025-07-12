@@ -29,7 +29,7 @@ router.post("/", auth, async (req, res) => {
 // Get feedback with voting status
 router.get("/:id", async (req, res) => {
   try {
-    const feedback = await Feedback.findOne({ id: String(req.params.id) });
+    const feedback = await Feedback.findOne({ id: req.params.id });
     if (!feedback) {
       return res.status(404).json({ error: "Feedback not found" });
     }
@@ -49,7 +49,7 @@ router.get("/:id", async (req, res) => {
         // Check if user has voted for this feedback
         const existingVote = await FeedbackVote.findOne({ 
           userId: userId, 
-          feedbackId: String(req.params.id) 
+          feedbackId: req.params.id 
         });
 
         if (existingVote) {
@@ -81,7 +81,7 @@ router.post("/:id/vote", auth, async (req, res) => {
   try {
     const { type } = req.body;
     const userId = req.user; // From auth middleware
-    const feedbackId = String(req.params.id);
+    const feedbackId = req.params.id;
 
     if (!type || !["like", "dislike"].includes(type)) {
       return res.status(400).json({ error: "Invalid vote type" });
