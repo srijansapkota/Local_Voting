@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: import.meta.env.mode === "development"
+    origin: import.meta.env.MODE === "development"
       ? 'http://localhost:5173'
       : '/', 
     credentials: true,

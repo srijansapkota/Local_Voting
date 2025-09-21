@@ -6,11 +6,11 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: import.meta.env.mode ==="development" ? 'http://localhost:8000' : '/',
+        target: import.meta.env.MODE ==="development" ? 'http://localhost:8000' : '/',
         changeOrigin: true,
       },
       '/auth': {
-        target: import.meta.env.mode === "development" ? 'http://localhost:8000' : '/',
+        target: import.meta.env.MODE === "development" ? 'http://localhost:8000' : '/',
         changeOrigin: true,
       },
     },
