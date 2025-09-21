@@ -5,7 +5,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: import.meta.env.DEV
+    origin: import.meta.env.mode === "development"
       ? 'http://localhost:5173'
       : '/', 
     credentials: true,
