@@ -5,9 +5,6 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 
-
-const __dirname = path.resolve();
-
 // Initialize Express app
 const app = express();
 
@@ -19,9 +16,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: import.meta.env.MODE === "development"
+    origin: process.env.NODE_ENV === "development"
       ? 'http://localhost:5173'
-      : '/', 
+      : process.env.FRONTEND_URL || '*', 
     credentials: true,
   })
 );
@@ -92,7 +89,3 @@ process.on("uncaughtException", (err) => {
   console.error("Uncaught Exception:", err);
   process.exit(1);
 });
-
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname,"../frontend/dist", "index.html")))
-}
