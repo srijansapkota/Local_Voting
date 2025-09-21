@@ -5,6 +5,9 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 
+
+const __dirname = path.resolve();
+
 // Initialize Express app
 const app = express();
 
@@ -16,7 +19,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5174", "https://normal-app2-1.onrender.com"],
+    origin: import.meta.env.DEV
+      ? 'http://localhost:5173'
+      : '/', 
     credentials: true,
   })
 );
@@ -87,3 +92,7 @@ process.on("uncaughtException", (err) => {
   console.error("Uncaught Exception:", err);
   process.exit(1);
 });
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname,"../frontend/dist", "index.html")))
+}
