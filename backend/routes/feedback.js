@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Feedback = require("../models/feedback..js");
+const Feedback = require("../models/feedback.js");
 const auth = require("../middleware/auth");
 const FeedbackVote = require("../models/feedbackVotes");
 
