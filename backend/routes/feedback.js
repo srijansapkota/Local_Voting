@@ -4,7 +4,7 @@ const Feedback = require("../models/feedback.js");
 const auth = require("../middleware/auth");
 const FeedbackVote = require("../models/feedbackVotes");
 
-// Create feedback (protected)
+
 router.post("/", auth, async (req, res) => {
   try {
     const { id, question } = req.body;
@@ -26,7 +26,7 @@ router.post("/", auth, async (req, res) => {
   }
 });
 
-// Get feedback with voting status
+
 router.get("/:id", async (req, res) => {
   try {
     const feedback = await Feedback.findOne({ id: req.params.id });

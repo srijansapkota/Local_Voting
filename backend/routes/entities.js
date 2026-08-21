@@ -4,7 +4,7 @@ const Entity = require("../models/entities");
 const auth = require("../middleware/auth");
 const EntityVote = require("../models/entityVotes");
 
-// Get all entities
+
 router.get("/", async (req, res) => {
   try {
     const entities = await Entity.find();
@@ -14,13 +14,13 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Get a single entity by id with voting status
+
 router.get("/:id", async (req, res) => {
   try {
     const entity = await Entity.findOne({ id: req.params.id });
     if (!entity) return res.status(404).json({ error: "Entity not found" });
 
-    // Check if user is authenticated (token exists)
+    
     const token = req.cookies.token;
     let userVote = null;
     let hasVoted = false;
@@ -32,7 +32,7 @@ router.get("/:id", async (req, res) => {
         const decoded = jwt.verify(token, process.env.JWT_Secret);
         const userId = decoded.id;
 
-        // Check if user has voted for this entity
+        
         const existingVote = await EntityVote.findOne({ 
           userId: userId, 
           entityId: req.params.id 
@@ -44,12 +44,12 @@ router.get("/:id", async (req, res) => {
           userVote = existingVote;
         }
       } catch (err) {
-        // Token is invalid, treat as unauthenticated
+        
         console.log("Invalid token in entities route:", err.message);
       }
     }
 
-    // Return entity data with voting status
+    
     res.json({
       ...entity.toObject(),
       hasVoted,
@@ -62,25 +62,25 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// Vote endpoint - requires authentication
+
 router.post("/:id/vote", auth, async (req, res) => {
   try {
     const { type } = req.body;
-    const userId = req.user; // From auth middleware
+    const userId = req.user; 
     const entityId = req.params.id;
 
     if (!type || !["up", "down"].includes(type)) {
       return res.status(400).json({ error: "Invalid vote type" });
     }
 
-    // Check if user has already voted
+    
     const existingVote = await EntityVote.findOne({ userId, entityId });
     
     if (existingVote) {
       return res.status(400).json({ error: "You have already voted for this entity" });
     }
 
-    // Create the vote record
+
     const newVote = new EntityVote({
       userId,
       entityId,
@@ -88,7 +88,7 @@ router.post("/:id/vote", auth, async (req, res) => {
     });
     await newVote.save();
 
-    // Update entity vote count
+    
     const entity = await Entity.findOne({ id: entityId });
     if (!entity) {
       return res.status(404).json({ error: "Entity not found" });
@@ -101,7 +101,7 @@ router.post("/:id/vote", auth, async (req, res) => {
     }
     await entity.save();
 
-    // Return updated entity data with voting status
+    
     res.json({
       ...entity.toObject(),
       hasVoted: true,
