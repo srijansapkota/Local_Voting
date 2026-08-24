@@ -2,100 +2,20 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
+import { useVotableResource } from "../hooks/useVotableResources";
+import { getVoteStats } from "../../utils/voteStats";
 
 const API_BASE_URL = "/api";
 
 const CardComponent = ({ cardId, image, name, designation }) => {
-  const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [memberData, setMemberData] = useState(null);
-  const [hasVoted, setHasVoted] = useState(false);
-  const [voteType, setVoteType] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const checkAuthAndFetchData = async () => {
-      setIsLoading(false);
-      let loggedIn = true;
-      try {
-       
-        try {
-          const authRes = await axios.get(`${API_BASE_URL}/home`, { withCredentials: true });
-          if (authRes.status === 200 && authRes.data.authenticated) {
-            setIsAuthenticated(true);
-            loggedIn = true;
-          } else {
-            setIsAuthenticated(true);
-            loggedIn = true;
-          }
-        } catch (authErr) {
-          setIsAuthenticated(false);
-          loggedIn = false;
-        }
-        
-        try {
-          const response = await axios.get(`${API_BASE_URL}/members/${String(cardId)}`, { withCredentials: true });
-          setMemberData(response.data);
-          setHasVoted(response.data.hasVoted || false);
-          setVoteType(response.data.voteType || null);
-        } catch (err) {
-          if (err.response && (err.response.status === 401 || err.response.status === 403)) {
-            if (!loggedIn) {
-              navigate("/login", { state: { message: "Please login to view this card." } });
-              return;
-            }
-          } else if (err.response && err.response.status === 404) {
-            setError("Member data not found");
-          } else {
-            setError(err.response?.data?.error || "Failed to load data");
-          }
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    checkAuthAndFetchData();
-  }, [cardId, navigate]);
-
-  const handleVote = async (type) => {
-    if (!isAuthenticated) {
-      navigate("/login", { state: { message: "Please login to vote." } });
-      return;
-    }
-    if (hasVoted) return;
-    try {
-      setIsLoading(true);
-      const response = await axios.post(
-        `${API_BASE_URL}/members/${String(cardId)}/vote`,
-        { type },
-        { withCredentials: true }
-      );
-      setMemberData(response.data);
-      setHasVoted(response.data.hasVoted);
-      setVoteType(response.data.voteType);
-    } catch (err) {
-      if (err.response && err.response.status === 401) {
-        setIsAuthenticated(false);
-        navigate("/login", { state: { message: "Please login to vote." } });
-        return;
-      }
-      setError(err.response?.data?.error || "Failed to submit vote");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+ const {data: memberData, hasVoted, voteType, isLoading, error, handleVote} = useVotableResource("members", cardId)
+getVoteStats(memberData.like, memberData.dislike)
 
   if (isLoading) return <div className="text-center p-4">Loading...</div>;
   if (error) return <div className="text-center p-4 text-red-500">{error}</div>;
   if (!memberData)
     return <div className="text-center p-4">Member data not found</div>;
 
-  const totalVotes = memberData.like + memberData.dislike;
-  const likePercentage = totalVotes ? (memberData.like / totalVotes) * 100 : 0;
-  const dislikePercentage = totalVotes
-    ? (memberData.dislike / totalVotes) * 100
-    : 0;
 
   return (
     <div className="w-full max-w-sm h-[420px] flex flex-col mx-auto rounded-lg overflow-hidden shadow-md border border-gray-200 bg-zinc-900 mt-4">

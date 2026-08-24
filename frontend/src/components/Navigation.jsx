@@ -1,38 +1,22 @@
 import { Link, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import axios from "axios";
+import { useAuth } from "../hooks/useAuth";
+import { useQueryClient } from "@tanstack/react-query";
 
 const API_BASE_URL = "/api";
 
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const authRes = await axios.get(`${API_BASE_URL}/home`, { withCredentials: true });
-        if (authRes.status === 200 && authRes.data.authenticated) {
-          setIsAuthenticated(true);
-          console.log('User is authenticated');
-        } else {
-          setIsAuthenticated(false);
-          console.log('User is not authenticated');
-        }
-      } catch (error) {
-        setIsAuthenticated(false);
-        console.log('Auth check failed', error);
-      }
-    };
-    checkAuth();
-  }, []);
+  const { isAuthenticated } = useAuth();
+  const queryClient = useQueryClient();
 
   const handleLogout = async () => {
     try {
       await axios.post("/auth/logout", {}, { withCredentials: true });
-      setIsAuthenticated(false);
+      queryClient.setQueryData(['auth', { authenticated: false, user: null}])
     } catch (error) {
       console.error("Logout error:", error);
     }

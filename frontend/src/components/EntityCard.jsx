@@ -2,101 +2,20 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
+import { useVotableResource } from "../hooks/useVotableResources";
+import { getVoteStats } from "../../utils/voteStats";
 
 const API_BASE_URL = "/api";
 
 const EntityCard = ({ image, name, shortName, id }) => {
-  const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [entityData, setEntityData] = useState(null);
-  const [hasVoted, setHasVoted] = useState(false);
-  const [voteType, setVoteType] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const checkAuthAndFetchData = async () => {
-      setIsLoading(true);
-      let loggedIn = false;
-      try {
-        try {
-          const authRes = await axios.get(`${API_BASE_URL}/home`, { withCredentials: true });
-          if (authRes.status === 200 && authRes.data.authenticated) {
-            setIsAuthenticated(true);
-            loggedIn = true;
-          } else {
-            setIsAuthenticated(false);
-            loggedIn = false;
-          }
-        } catch (authErr) {
-          setIsAuthenticated(false);
-          loggedIn = false;
-        }
-       
-        try {
-          const response = await axios.get(`${API_BASE_URL}/entities/${String(id)}`, { withCredentials: true });
-          setEntityData(response.data);
-          setHasVoted(response.data.hasVoted || false);
-          setVoteType(response.data.voteType || null);
-        } catch (err) {
-          if (err.response && (err.response.status === 401 || err.response.status === 403)) {
-            if (!loggedIn) {
-              navigate("/login", { state: { message: "Please login to view this card." } });
-              return;
-            }
-          } else if (err.response && err.response.status === 404) {
-            setError("Entity data not found");
-          } else {
-            setError(err.response?.data?.error || "Failed to load data");
-          }
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    checkAuthAndFetchData();
-  }, [id, navigate]);
-
-  const handleVote = async (type) => {
-    if (!isAuthenticated) {
-      navigate("/login", { state: { message: "Please login to vote." } });
-      return;
-    }
-    if (hasVoted) return;
-    try {
-      setIsLoading(true);
-      const response = await axios.post(
-        `${API_BASE_URL}/entities/${String(id)}/vote`,
-        { type },
-        { withCredentials: true }
-      );
-      setEntityData(response.data);
-      setHasVoted(response.data.hasVoted);
-      setVoteType(response.data.voteType);
-    } catch (err) {
-      if (err.response && err.response.status === 401) {
-        setIsAuthenticated(false);
-        navigate("/login", { state: { message: "Please login to vote." } });
-        return;
-      }
-      setError(err.response?.data?.error || "Failed to submit vote");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+  const {data: entityData, hasVoted, voteType, isLoading, error, handleVote} = useVotableResource("entities", id)
+getVoteStats(entityData.upvotes, entityData.downvotes)
   if (isLoading) return <div className="text-center p-4">Loading...</div>;
   if (error) return <div className="text-center p-4 text-red-500">{error}</div>;
   if (!entityData)
     return <div className="text-center p-4">Entity data not found</div>;
 
-  const totalVotes = (entityData.upvotes || 0) + (entityData.downvotes || 0);
-  const upvotePercentage = totalVotes > 0
-    ? Math.round((entityData.upvotes / totalVotes) * 100)
-    : 0;
-  const downvotePercentage = totalVotes > 0
-    ? Math.round((entityData.downvotes / totalVotes) * 100)
-    : 0;
+  
 
   return (
     <div className="w-full max-w-sm h-[420px] flex flex-col mx-auto rounded-lg overflow-hidden shadow-md border border-gray-200 bg-zinc-900 mt-4">

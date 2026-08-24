@@ -3,12 +3,13 @@ import { Button, Input } from "@heroui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-
+  const queryClient = useQueryClient();
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -17,6 +18,7 @@ export default function Login() {
         { email, password },
         { withCredentials: true }
       );
+      await queryClient.invalidateQueries({queryKey:['auth']})
       toast.success("Logged in successfully!", { position: "top-center" });
       navigate("/");
     } catch (err) {
