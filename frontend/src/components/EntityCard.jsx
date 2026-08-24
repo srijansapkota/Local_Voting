@@ -19,7 +19,6 @@ const EntityCard = ({ image, name, shortName, id }) => {
       setIsLoading(true);
       let loggedIn = false;
       try {
-        // Check authentication
         try {
           const authRes = await axios.get(`${API_BASE_URL}/home`, { withCredentials: true });
           if (authRes.status === 200 && authRes.data.authenticated) {
@@ -33,7 +32,7 @@ const EntityCard = ({ image, name, shortName, id }) => {
           setIsAuthenticated(false);
           loggedIn = false;
         }
-        // Fetch entity data (this should work even without auth)
+       
         try {
           const response = await axios.get(`${API_BASE_URL}/entities/${String(id)}`, { withCredentials: true });
           setEntityData(response.data);

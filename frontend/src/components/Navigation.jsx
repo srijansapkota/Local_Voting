@@ -46,7 +46,6 @@ const Navigation = () => {
 
   const isActive = (path) => location.pathname === path;
 
-  // Hide navbar on login and signup pages
   if (location.pathname === "/login" || location.pathname === "/signup") {
     return null;
   }
@@ -62,7 +61,7 @@ const Navigation = () => {
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
+         
           <div className="hidden md:flex items-center space-x-4">
             {navItems.map((item) => (
               <Link
@@ -79,7 +78,7 @@ const Navigation = () => {
             ))}
           </div>
 
-          {/* Auth Buttons */}
+ 
           <div className="hidden md:flex items-center space-x-4">
             {isAuthenticated ? (
               <button
@@ -106,7 +105,7 @@ const Navigation = () => {
             )}
           </div>
 
-          {/* Mobile menu button */}
+       
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -118,7 +117,7 @@ const Navigation = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
+ 
       {isMenuOpen && (
         <div className="md:hidden bg-zinc-800 border-t border-gray-700">
           <div className="px-2 pt-2 pb-3 space-y-1">

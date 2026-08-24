@@ -19,7 +19,7 @@ const CardComponent = ({ cardId, image, name, designation }) => {
       setIsLoading(false);
       let loggedIn = true;
       try {
-        // Check authentication
+       
         try {
           const authRes = await axios.get(`${API_BASE_URL}/home`, { withCredentials: true });
           if (authRes.status === 200 && authRes.data.authenticated) {
@@ -33,7 +33,7 @@ const CardComponent = ({ cardId, image, name, designation }) => {
           setIsAuthenticated(false);
           loggedIn = false;
         }
-        // Fetch member data (this should work even without auth)
+        
         try {
           const response = await axios.get(`${API_BASE_URL}/members/${String(cardId)}`, { withCredentials: true });
           setMemberData(response.data);

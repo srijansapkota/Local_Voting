@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router()
 const jwt = require("jsonwebtoken");
-const user = require("../models/user");
+const User = require("../models/user");
 
 const generateToken = (userId, res) => {
   const isProduction = process.env.NODE_ENV == 'production';
@@ -17,18 +17,18 @@ const generateToken = (userId, res) => {
 
 router.post("/signup", async (req, res) => {
   try {
-    const user = await user.create(req.body);
-    generateToken(user._id, res);
-    res.status(201).json({ id: user._id, name: user.name, email:user.emal })
+    const newUser = await User.create(req.body);
+    generateToken(newUser._id, res);
+    res.status(201).json({ id: newUser._id, name: newUser.name, email:newUser.email })
   } catch (err) {
     res.status(400).json({error: err.message})
   }
 })
 
-router.post("/login"), async (req, res) => {
+router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = user.findONe({ email });
+    const user = user.findOne({ email });
     if (!user) {
       return res.status(400).json({error: "No user found"})
     }
@@ -40,7 +40,7 @@ router.post("/login"), async (req, res) => {
   }catch (err) {
       res.status(500).json({ error: err.message });
     }
-}
+})
 
 router.post("/logout", (req, res) => {
   res.clearCookie("token");
@@ -57,6 +57,6 @@ router.get("/status", (req, res) => {
   } catch (err) {
     res.status(401).json({authenticated: false, user:null})
   }
-})
+})``
 
 module.exports = router;

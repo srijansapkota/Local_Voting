@@ -19,7 +19,7 @@ const FeedbackCard = ({ image, question, id }) => {
       setIsLoading(true);
       let loggedIn = false;
       try {
-        // Check authentication
+  
         try {
           const authRes = await axios.get(`${API_BASE_URL}/home`, { withCredentials: true });
           if (authRes.status === 200 && authRes.data.authenticated) {
@@ -33,7 +33,7 @@ const FeedbackCard = ({ image, question, id }) => {
           setIsAuthenticated(false);
           loggedIn = false;
         }
-        // Fetch feedback data (this should work even without auth)
+      
         try {
           const response = await axios.get(`${API_BASE_URL}/feedback/${String(id)}`, { withCredentials: true });
           setFeedbackData(response.data);
@@ -99,7 +99,7 @@ const FeedbackCard = ({ image, question, id }) => {
     ? (feedbackData.dislike / totalVotes) * 100
     : 0;
 
-  // Determine text size and card width based on question length
+
   const isLongQuestion = question && question.length > 75;
   const cardWidthClass = isLongQuestion ? "max-w-3xl" : "max-w-sm";
   const questionTextClass = isLongQuestion ? "text-sm" : "text-lg";
