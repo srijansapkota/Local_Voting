@@ -1,4 +1,9 @@
+const express = require("express");
+const router = express.Router();
+const jwt = require("jsonwebtoken");
 const { Member, Feedback, Entity } = require("../models/resources");
+const Vote = require("../models/vote");
+const auth = require("../middleware/auth");
 
 const models = {
   members: Member,
@@ -28,10 +33,10 @@ router.get("/:category/:id", async (req, res) => {
           voteType = existingVote.voteType
         }
       } catch (err) {
-        
+      
       }
-      res.json({ ...item.toObject(), hasVoted, voteType });
     }
+     res.json({ ...item.toObject(), hasVoted, voteType });
   }catch (err) {
       res.status(500).json({ error: err.message });
     }
@@ -45,7 +50,12 @@ router.post("/:category/:id/vote", auth, async (req, res) => {
     const Model = models[category];
     if (!Model) return res.status(400).json({ error: "Invalid route category" });
 
-    const existingVote = await Vote.findOne({ userId: req.user, targetId: id, category, voteType: type });
+    const existingVote = await Vote.findOne({ userId: req.user, targetId: id, category });
+    if (existingVote) {
+      return res.status(400).json({
+        error: "You have already voted"
+      })
+    }
 
     const updateField = (type === "up" || type ==="like")?  (category === "entities" ? "upvotes" : "like")
           : (category === "entities" ? "downvotes" : "dislike");
@@ -55,7 +65,9 @@ router.post("/:category/:id/vote", auth, async (req, res) => {
           { $inc: { [updateField]: 1 } },
           { new: true }
         );
-  res.json({ ...updatedItem.toObject(), hasVoted: true, voteType: type });
+      if (!updatedItem) return res.status(404).json({ error: "Item not found" });
+    await Vote.create({userId: req.user, targetId: id, category,voteType:type})
+    res.json({ ...updatedItem.toObject(), hasVoted: true, voteType: type });
   }catch (err) {
       res.status(500).json({ error: err.message });
     }
