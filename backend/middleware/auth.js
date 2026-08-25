@@ -6,7 +6,7 @@ module.exports = (req, res, next) => {
     return res.status(401).json({error: "Please login to continue"})
   }
   try {
-    const decoded = jwt.verify(token, process.env.JWT_Secret, options);
+    const decoded = jwt.verify(token, process.env.JWT_Secret);
     req.user = decoded.id;
     next();
   } catch (err) {
