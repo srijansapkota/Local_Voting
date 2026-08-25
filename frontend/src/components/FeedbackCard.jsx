@@ -5,12 +5,12 @@ import { getVoteStats } from "../../utils/voteStats";
 const API_BASE_URL = "/api";
 
 const FeedbackCard = ({ image, question, id }) => {
- const {data: feedbackData, hasVoted, voteType, isLoading, error, handleVote} = useVotableResource("feedback", cardId)
-getVoteStats(feedbackData.like, feedbackData.dislike)
-  if (isLoading) return <div className="text-center p-4">Loading...</div>;
-  if (error) return <div className="text-center p-4 text-red-500">{error}</div>;
-  if (!feedbackData)
-    return <div className="text-center p-4">Feedback data not found</div>;
+ const {data: feedbackData, hasVoted, voteType, isLoading, error, handleVote} = useVotableResource("feedback", id)
+ if (isLoading) return <div className="text-center p-4">Loading...</div>;
+ if (error) return <div className="text-center p-4 text-red-500">{error}</div>;
+ if (!feedbackData)
+  return <div className="text-center p-4">Feedback data not found</div>;
+ const {positivePercentage: likePercentage, negativePercentage: dislikePercentage}= getVoteStats(feedbackData.like, feedbackData.dislike)
 
 
 

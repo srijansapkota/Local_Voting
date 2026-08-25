@@ -1,21 +1,19 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+
 import { ThumbsUp, ThumbsDown } from "lucide-react";
 import { useVotableResource } from "../hooks/useVotableResources";
 import { getVoteStats } from "../../utils/voteStats";
 
-const API_BASE_URL = "/api";
 
 const CardComponent = ({ cardId, image, name, designation }) => {
  const {data: memberData, hasVoted, voteType, isLoading, error, handleVote} = useVotableResource("members", cardId)
-getVoteStats(memberData.like, memberData.dislike)
-
-  if (isLoading) return <div className="text-center p-4">Loading...</div>;
-  if (error) return <div className="text-center p-4 text-red-500">{error}</div>;
-  if (!memberData)
-    return <div className="text-center p-4">Member data not found</div>;
-
+ 
+ if (isLoading) return <div className="text-center p-4">Loading...</div>;
+ if (error) return <div className="text-center p-4 text-red-500">{error}</div>;
+ if (!memberData)
+  return <div className="text-center p-4">Member data not found</div>;
+ 
+ const { positivePercentage: likePercentage, negativePercentage: dislikePercentage } =
+   getVoteStats(memberData.like, memberData.dislike);
 
   return (
     <div className="w-full max-w-sm h-[420px] flex flex-col mx-auto rounded-lg overflow-hidden shadow-md border border-gray-200 bg-zinc-900 mt-4">

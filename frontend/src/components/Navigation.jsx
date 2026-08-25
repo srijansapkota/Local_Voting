@@ -5,7 +5,6 @@ import axios from "axios";
 import { useAuth } from "../hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
 
-const API_BASE_URL = "/api";
 
 const Navigation = () => {
   const location = useLocation();
@@ -15,8 +14,8 @@ const Navigation = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("/auth/logout", {}, { withCredentials: true });
-      queryClient.setQueryData(['auth', { authenticated: false, user: null}])
+      await axios.post("/api/auth/logout", {}, { withCredentials: true });
+      queryClient.setQueryData(['auth'], { authenticated: false, user: null})
     } catch (error) {
       console.error("Logout error:", error);
     }
@@ -24,7 +23,7 @@ const Navigation = () => {
 
   const navItems = [
     { path: "/", label: "Home", description: "College Representatives" },
-    { path: "/integrations", label: "Integrations", description: "College Buildings" },
+    { path: "/entities", label: "Integrations", description: "College Buildings" },
     { path: "/feedback", label: "Feedback", description: "College Events" },
   ];
 
@@ -38,7 +37,7 @@ const Navigation = () => {
     <nav className="bg-zinc-900 border-b border-gray-700 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          {/* Logo/Brand */}
+          
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0">
               <h1 className="text-xl font-bold text-purple-600">Acme</h1>

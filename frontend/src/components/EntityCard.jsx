@@ -9,12 +9,12 @@ const API_BASE_URL = "/api";
 
 const EntityCard = ({ image, name, shortName, id }) => {
   const {data: entityData, hasVoted, voteType, isLoading, error, handleVote} = useVotableResource("entities", id)
-getVoteStats(entityData.upvotes, entityData.downvotes)
   if (isLoading) return <div className="text-center p-4">Loading...</div>;
   if (error) return <div className="text-center p-4 text-red-500">{error}</div>;
   if (!entityData)
     return <div className="text-center p-4">Entity data not found</div>;
-
+  
+  const{positivePercentage: upvotePercentage, negativePercentage : downvotePercentage}=getVoteStats(entityData.upvotes, entityData.downvotes)
   
 
   return (

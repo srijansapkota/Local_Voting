@@ -1,7 +1,8 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-const API_BASE_URL = "api";
+const API_BASE_URL = "/api";
 import axios from "axios";
+import {useAuth } from './useAuth'
 
 export const useVotableResource = (category, id) => {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ export const useVotableResource = (category, id) => {
       setIsLoading(true);
 
       try {
-        const response = await axios.get(`${API_BASE_URL}/${category}/${String(id)}`, { withCredintials: true })
+        const response = await axios.get(`${API_BASE_URL}/${category}/${String(id)}`, { withCredentials: true })
         setData(response.data);
         setHasVoted(response.data.hasVoted || false);
         setVoteType(response.data.voteType || null);
@@ -52,12 +53,12 @@ export const useVotableResource = (category, id) => {
         const response = await axios.post(
           `${API_BASE_URL}/${category}/${String(id)}/vote`,
           {type},
-          {withCredintials: true}
+          {withCredentials: true}
         );
         setData(response.data);
       setHasVoted(response.data.hasVoted);
       setVoteType(response.data.voteType);
-      } catch (error) {
+      } catch (err) {
          if (err.response?.status === 401) {
         navigate("/login", { state: { message: "Please login to vote." } });
         return;
@@ -66,5 +67,6 @@ export const useVotableResource = (category, id) => {
       } finally{
         setIsLoading(false);
       }
-    },{data, hasVoted, voteType, isLoading, error, handleVote})
+    },[category, id, isAuthenticated, hasVoted, navigate]);
+    return {data, hasVoted, voteType, isLoading, error, handleVote}
 }

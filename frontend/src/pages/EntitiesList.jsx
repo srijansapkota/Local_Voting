@@ -1,5 +1,5 @@
 import entities from "../data/entities";
-import EntityCard from "./EntityCard";
+import EntityCard from "../components/EntityCard";
 
 const EntitiesList = () => {
   return (

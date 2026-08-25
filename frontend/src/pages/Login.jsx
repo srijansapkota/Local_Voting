@@ -14,7 +14,7 @@ export default function Login() {
     e.preventDefault();
     try {
       await axios.post(
-        "/auth/login",
+        "/api/auth/login",
         { email, password },
         { withCredentials: true }
       );
