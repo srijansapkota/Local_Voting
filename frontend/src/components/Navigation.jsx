@@ -1,38 +1,21 @@
 import { Link, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import axios from "axios";
+import { useAuth } from "../hooks/useAuth";
+import { useQueryClient } from "@tanstack/react-query";
 
-const API_BASE_URL = "/api";
 
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const authRes = await axios.get(`${API_BASE_URL}/home`, { withCredentials: true });
-        if (authRes.status === 200 && authRes.data.authenticated) {
-          setIsAuthenticated(true);
-          console.log('User is authenticated');
-        } else {
-          setIsAuthenticated(false);
-          console.log('User is not authenticated');
-        }
-      } catch (error) {
-        setIsAuthenticated(false);
-        console.log('Auth check failed', error);
-      }
-    };
-    checkAuth();
-  }, []);
+  const { isAuthenticated } = useAuth();
+  const queryClient = useQueryClient();
 
   const handleLogout = async () => {
     try {
-      await axios.post("/auth/logout", {}, { withCredentials: true });
-      setIsAuthenticated(false);
+      await axios.post("/api/auth/logout", {}, { withCredentials: true });
+      queryClient.setQueryData(['auth'], { authenticated: false, user: null})
     } catch (error) {
       console.error("Logout error:", error);
     }
@@ -40,13 +23,12 @@ const Navigation = () => {
 
   const navItems = [
     { path: "/", label: "Home", description: "College Representatives" },
-    { path: "/integrations", label: "Integrations", description: "College Buildings" },
+    { path: "/entities", label: "Integrations", description: "College Buildings" },
     { path: "/feedback", label: "Feedback", description: "College Events" },
   ];
 
   const isActive = (path) => location.pathname === path;
 
-  // Hide navbar on login and signup pages
   if (location.pathname === "/login" || location.pathname === "/signup") {
     return null;
   }
@@ -55,14 +37,14 @@ const Navigation = () => {
     <nav className="bg-zinc-900 border-b border-gray-700 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          {/* Logo/Brand */}
+          
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0">
-              <h1 className="text-xl font-bold text-purple-600">Acme</h1>
+              <h1 className="text-xl font-bold text-purple-600">Local Voting</h1>
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
+         
           <div className="hidden md:flex items-center space-x-4">
             {navItems.map((item) => (
               <Link
@@ -79,7 +61,7 @@ const Navigation = () => {
             ))}
           </div>
 
-          {/* Auth Buttons */}
+ 
           <div className="hidden md:flex items-center space-x-4">
             {isAuthenticated ? (
               <button
@@ -106,7 +88,7 @@ const Navigation = () => {
             )}
           </div>
 
-          {/* Mobile menu button */}
+       
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -118,7 +100,7 @@ const Navigation = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
+ 
       {isMenuOpen && (
         <div className="md:hidden bg-zinc-800 border-t border-gray-700">
           <div className="px-2 pt-2 pb-3 space-y-1">

@@ -1,30 +1,26 @@
+
 import { ThumbsUp, ThumbsDown } from "lucide-react";
 import { useVotableResource } from "../hooks/useVotableResources";
 import { getVoteStats } from "../../utils/voteStats";
 
-const API_BASE_URL = "/api";
 
-const FeedbackCard = ({ image, question, id }) => {
- const {data: feedbackData, hasVoted, voteType, isLoading, error, handleVote} = useVotableResource("feedback", id)
+const CardComponent = ({ cardId, image, name, designation }) => {
+ const {data: memberData, hasVoted, voteType, isLoading, error, handleVote} = useVotableResource("members", cardId)
+ 
  if (isLoading) return <div className="text-center p-4">Loading...</div>;
  if (error) return <div className="text-center p-4 text-red-500">{error}</div>;
- if (!feedbackData)
-  return <div className="text-center p-4">Feedback data not found</div>;
- const {positivePercentage: likePercentage, negativePercentage: dislikePercentage}= getVoteStats(feedbackData.like, feedbackData.dislike)
-
-
-
-
-  const isLongQuestion = question && question.length > 75;
-  const cardWidthClass = isLongQuestion ? "max-w-3xl" : "max-w-sm";
-  const questionTextClass = isLongQuestion ? "text-sm" : "text-lg";
+ if (!memberData)
+  return <div className="text-center p-4">Member data not found</div>;
+ 
+ const { positivePercentage: likePercentage, negativePercentage: dislikePercentage } =
+   getVoteStats(memberData.like, memberData.dislike);
 
   return (
-    <div className={`w-full ${cardWidthClass} flex flex-col mx-auto rounded-lg overflow-hidden shadow-md border border-gray-200 bg-zinc-900 mt-4`}>
+    <div className="w-full max-w-sm h-[420px] flex flex-col mx-auto rounded-lg overflow-hidden shadow-md border border-gray-200 bg-zinc-900 mt-4">
       {image ? (
         <img
           src={image}
-          alt={`Feedback: ${question}`}
+          alt={`Portrait of ${name}`}
           width={320}
           className="w-full h-56 object-cover rounded-t-lg border-b border-gray-200 shadow-sm"
         />
@@ -34,10 +30,10 @@ const FeedbackCard = ({ image, question, id }) => {
         </div>
       )}
       <div className="flex-1 flex flex-col px-4 py-3 bg-black">
-        <div className={`font-bold text-purple-600 mb-1 text-center ${questionTextClass}`}>
-          {question}
+        <div className="font-bold text-purple-600 text-lg mb-1 text-center">
+          <div>{name}</div>
+          <div className="text-purple-400 text-sm">{designation}</div>
         </div>
-
         <div className="flex justify-center gap-3 mt-2 mb-2">
           {!hasVoted ? (
             <>
@@ -66,7 +62,6 @@ const FeedbackCard = ({ image, question, id }) => {
             </div>
           )}
         </div>
-
         <div className="mt-auto">
           <div className="mb-1 flex h-3 overflow-hidden rounded-full bg-gray-200">
             <div
@@ -80,10 +75,10 @@ const FeedbackCard = ({ image, question, id }) => {
           </div>
           <div className="flex items-center justify-between text-xs">
             <div className="text-green-600 font-medium">
-              {Math.round(likePercentage)}% ({feedbackData.like})
+              {Math.round(likePercentage)}% ({memberData.like})
             </div>
             <div className="text-red-600 font-medium">
-              {Math.round(dislikePercentage)}% ({feedbackData.dislike})
+              {Math.round(dislikePercentage)}% ({memberData.dislike})
             </div>
           </div>
         </div>
@@ -92,4 +87,4 @@ const FeedbackCard = ({ image, question, id }) => {
   );
 };
 
-export default FeedbackCard;
+export default CardComponent;

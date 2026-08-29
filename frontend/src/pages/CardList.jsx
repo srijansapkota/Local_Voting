@@ -1,5 +1,5 @@
 import cardData from "../data/cardData";
-import CardComponent from "./cardComponent";
+import CardComponent from "../components/CardComponent";
 
 const CardList = () => (
   <div className="pb-8 px-4 sm:px-6 bg-zinc-900">

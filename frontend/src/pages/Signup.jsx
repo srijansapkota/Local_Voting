@@ -20,7 +20,7 @@ export default function Signup() {
     }
     setLoading(true);
     try {
-      const res = await axios.post("/auth/signup", {
+      const res = await axios.post("/api/auth/signup", {
         name,
         email,
         password,

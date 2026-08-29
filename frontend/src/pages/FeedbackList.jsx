@@ -1,5 +1,5 @@
 import feedbackData from "../data/feedbackData";
-import FeedbackCard from "./FeedbackCard";
+import FeedbackCard from "../components/FeedbackCard";
 
 const FeedbackList = () => (
   <div className="pt-20 pb-8 px-4 sm:px-6 bg-zinc-900 min-h-screen">

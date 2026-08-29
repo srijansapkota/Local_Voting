@@ -3,20 +3,22 @@ import { Button, Input } from "@heroui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-
+  const queryClient = useQueryClient();
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await axios.post(
-        "/auth/login",
+        "/api/auth/login",
         { email, password },
         { withCredentials: true }
       );
+      await queryClient.invalidateQueries({queryKey:['auth']})
       toast.success("Logged in successfully!", { position: "top-center" });
       navigate("/");
     } catch (err) {
@@ -48,7 +50,7 @@ export default function Login() {
               type="email"
               placeholder="m@example.com"
               required
-              className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-500 focus:ring-2 focus:ring-zinc-600 focus:border-zinc-600 px-4 py-3 rounded-md"
+              className="bg-zinc-800 border-zinc-700 p-4 text-black placeholder-zinc-500 focus:ring-2 focus:ring-zinc-600 focus:border-zinc-600 px-4 py-3 rounded-md"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -69,7 +71,7 @@ export default function Login() {
               id="password"
               type="password"
               required
-              className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-500 focus:ring-2 focus:ring-zinc-600 focus:border-zinc-600 px-4 py-3 rounded-md"
+              className="bg-zinc-800 border-zinc-700 text-black placeholder-zinc-500 focus:ring-2 focus:ring-zinc-600 focus:border-zinc-600 px-4 py-3 rounded-md"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
