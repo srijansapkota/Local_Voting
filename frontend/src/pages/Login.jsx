@@ -50,7 +50,7 @@ export default function Login() {
               type="email"
               placeholder="m@example.com"
               required
-              className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-500 focus:ring-2 focus:ring-zinc-600 focus:border-zinc-600 px-4 py-3 rounded-md"
+              className="bg-zinc-800 border-zinc-700 p-4 text-black placeholder-zinc-500 focus:ring-2 focus:ring-zinc-600 focus:border-zinc-600 px-4 py-3 rounded-md"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -71,7 +71,7 @@ export default function Login() {
               id="password"
               type="password"
               required
-              className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-500 focus:ring-2 focus:ring-zinc-600 focus:border-zinc-600 px-4 py-3 rounded-md"
+              className="bg-zinc-800 border-zinc-700 text-black placeholder-zinc-500 focus:ring-2 focus:ring-zinc-600 focus:border-zinc-600 px-4 py-3 rounded-md"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
