@@ -11,6 +11,41 @@ const models = {
   entities: Entity
 };
 
+const getUserId = (req) => {
+  const token = req.cookies.token;
+  if (!token) return null;
+  try {
+    return jwt.verify(token, process.env.JWT_Secret).id;
+  } catch {
+    return null;
+  }
+};
+
+router.get("/:category", async (req, res) => {
+  try {
+    const { category } = req.params;
+    const Model = models[category];
+    if (!Model) return res.status(400).json({ error: "Invalid route category" });
+
+    const items = await Model.find();
+    const userId = getUserId(req);
+    const votes = userId ? await Vote.find({ userId, category }) : [];
+    const voteTypeById = new Map(votes.map((v) => [v.targetId, v.voteType]));
+
+    const result = items
+      .sort((a, b) => Number(a.id) - Number(b.id))
+      .map((item) => ({
+        ...item.toObject(),
+        hasVoted: voteTypeById.has(item.id),
+        voteType: voteTypeById.get(item.id) ?? null,
+      }));
+
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 router.get("/:category/:id", async (req, res) => {
   try {
     const { category, id } = req.params;
